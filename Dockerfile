@@ -29,4 +29,8 @@ RUN npm install grunt-cli
 RUN mkdir -p /root/.ssh
 COPY id_rsa /root/.ssh/
 COPY id_rsa.pub /root/.ssh/
+COPY config /root/.ssh/
 RUN chmod 400 /root/.ssh/id_rsa
+RUN chmod 400 /root/.ssh/id_rsa.pub
+
+RUN apt-get install -y libfontconfig time
