@@ -1,20 +1,27 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
+
+ENV JAVA_VERSION=8 \
+    JAVA_UPDATE=192 \
+    JAVA_BUILD=12 \
+    JAVA_PATH=750e1c8617c5452694857ad95c3ee230 \
+    JAVA_HOME="/usr/lib/jvm/default-jvm"
 
 #Install
 RUN \
   apt-get update && \
   apt-get -y upgrade && \
-  apt-get install -y python-software-properties build-essential && \
+  apt-get install -y software-properties-common build-essential && \
   apt-get install -y software-properties-common && \
-  apt-get install -y git-core curl
+  apt-get install -y git-core curl wget ca-certificates
 
-  # Install Java.
-RUN mkdir -p Installs
-ADD jdk-7u80-linux-x64.tar.gz Installs/
-ADD jdk-8u161-linux-x64.tar.gz Installs/
-RUN mkdir -p /usr/lib/jvm/ && mv /Installs/jdk1.8.0_161 /usr/lib/jvm/java-8-oracle
+RUN cd "/tmp" && \
+    wget --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
+        "http://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION}u${JAVA_UPDATE}-b${JAVA_BUILD}/${JAVA_PATH}/jdk-${JAVA_VERSION}u${JAVA_UPDATE}-linux-x64.tar.gz" && \
+    tar -xzf "jdk-${JAVA_VERSION}u${JAVA_UPDATE}-linux-x64.tar.gz" && \
+    ls -al && \
+    sudo mv /usr/lib/jvm/default-jvm
 # Define commonly used JAVA_HOME variable
-ENV JAVA_HOME /Installs/jdk1.7.0_80
+ENV JAVA_HOME /usr/lib/jvm/default-jvm
 ENV PATH=${JAVA_HOME}/bin:$PATH
 
 #Install maven
